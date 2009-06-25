@@ -13,3 +13,4 @@ develop-eggs
 dist
 doc/build
 eggs
+parts
