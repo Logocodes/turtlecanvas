@@ -11,12 +11,16 @@ class Canvas(m.Model):
     A heading of 0 degrees points upward.
     """
 
+    class Meta:
+        verbose_name_plural = 'canvases'
+
     title = m.CharField(max_length=100)
     width = m.IntegerField('width (pixels)')
     height = m.IntegerField('height (pixels)')
 
-    class Meta:
-        verbose_name_plural = 'canvases'
+    def initial_state(self):
+        return CanvasState.objects.filter(
+            canvas=self, previous_state=None).get()
 
     def __unicode__(self):
         return self.title
@@ -38,10 +42,6 @@ class Canvas(m.Model):
             turtle_heading=0.0,
         )
         initial_state.save()
-
-    def initial_state(self):
-        return CanvasState.objects.filter(
-            canvas=self, previous_state=None).get()
 
 
 class CanvasState(m.Model):
