@@ -26,22 +26,24 @@ class Canvas(m.Model):
         return self.title
 
     def save(self, *args, **kw):
+        new_canvas = self.pk is None
         # Prevent alteration of width and height.
-        if self.pk is not None:
+        if not new_canvas:
             other = Canvas.objects.get(pk=self.pk)
             if other.width != self.width or other.height != self.height:
                 raise ValueError('width and height cannot be altered')
         # Save object.
         m.Model.save(self)
         # Store initial canvas state with centered turtle.
-        initial_state = CanvasState(
-            canvas=self,
-            previous_state=None,
-            turtle_x=float(self.width) / 2,
-            turtle_y=float(self.height) / 2,
-            turtle_heading=0.0,
-        )
-        initial_state.save()
+        if new_canvas:
+            initial_state = CanvasState(
+                canvas=self,
+                previous_state=None,
+                turtle_x=float(self.width) / 2,
+                turtle_y=float(self.height) / 2,
+                turtle_heading=0.0,
+            )
+            initial_state.save()
 
 
 class CanvasState(m.Model):

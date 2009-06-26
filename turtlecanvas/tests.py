@@ -18,6 +18,7 @@ class TurtleCanvasTests(TestCase):
         canvas.save()
         assert len(m.Canvas.objects.all()) == 1
         assert len(m.CanvasState.objects.filter(canvas=canvas)) == 1
+        assert len(canvas.canvasstate_set.all()) == 1
         state = canvas.initial_state()
         assert state.canvas == canvas
         assert state.previous_state == None
@@ -47,3 +48,19 @@ class TurtleCanvasTests(TestCase):
         canvas.width = 200
         canvas.height = 100
         self.assertRaises(ValueError, canvas.save)
+
+    def test_canvas_change_does_not_create_new_state(self):
+        canvas = m.Canvas(
+            title='My fancy art',
+            width=400,
+            height=300,
+        )
+        canvas.save()
+        assert len(m.Canvas.objects.all()) == 1
+        assert len(m.CanvasState.objects.filter(canvas=canvas)) == 1
+        assert len(canvas.canvasstate_set.all()) == 1
+        canvas.title = 'Go turtle go'
+        canvas.save()
+        assert len(m.Canvas.objects.all()) == 1
+        assert len(m.CanvasState.objects.filter(canvas=canvas)) == 1
+        assert len(canvas.canvasstate_set.all()) == 1
