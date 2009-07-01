@@ -3,11 +3,10 @@ from django.test import TestCase
 import turtlecanvas.models as m
 
 
-class TurtleCanvasTests(TestCase):
+class BasicCanvasTests(TestCase):
 
     def test_starts_empty(self):
         assert len(m.Canvas.objects.all()) == 0
-        assert len(m.CanvasState.objects.all()) == 0
 
     def test_canvas_creates_initial_state(self):
         canvas = m.Canvas(
@@ -17,28 +16,11 @@ class TurtleCanvasTests(TestCase):
         )
         canvas.save()
         assert len(m.Canvas.objects.all()) == 1
-        assert len(m.CanvasState.objects.filter(canvas=canvas)) == 1
-        assert len(canvas.canvasstate_set.all()) == 1
-        state = canvas.initial_state()
-        assert state.canvas == canvas
-        assert state.previous_state == None
-        assert state.turtle_x == 200.0
-        assert state.turtle_y == 150.0
-        assert state.turtle_heading == 0.0
+        assert canvas.turtle_x == 200.0
+        assert canvas.turtle_y == 150.0
+        assert canvas.turtle_heading == 0.0
 
-    def test_canvas_can_change_title(self):
-        canvas = m.Canvas(
-            title='My fancy art',
-            width=400,
-            height=300,
-        )
-        canvas.save()
-        assert canvas.title == 'My fancy art'
-        canvas.title = 'Go turtle go'
-        canvas.save()
-        assert canvas.title == 'Go turtle go'
-
-    def test_canvas_cannot_change_dimensions(self):
+    def test_canvas_cannot_change(self):
         canvas = m.Canvas(
             title='My fancy art',
             width=400,
@@ -49,18 +31,51 @@ class TurtleCanvasTests(TestCase):
         canvas.height = 100
         self.assertRaises(ValueError, canvas.save)
 
-    def test_canvas_change_does_not_create_new_state(self):
-        canvas = m.Canvas(
-            title='My fancy art',
-            width=400,
-            height=300,
-        )
-        canvas.save()
-        assert len(m.Canvas.objects.all()) == 1
-        assert len(m.CanvasState.objects.filter(canvas=canvas)) == 1
-        assert len(canvas.canvasstate_set.all()) == 1
-        canvas.title = 'Go turtle go'
-        canvas.save()
-        assert len(m.Canvas.objects.all()) == 1
-        assert len(m.CanvasState.objects.filter(canvas=canvas)) == 1
-        assert len(canvas.canvasstate_set.all()) == 1
+
+##class TransformationTests(TestCase):
+
+    ##def test_forward_100(self):
+        ##canvas = m.Canvas(
+            ##title='My fancy art',
+            ##width=400,
+            ##height=300,
+        ##)
+        ##canvas.save()
+        ##transformation = m.Transformation(
+            ##before=canvas,
+            ##command='forward',
+            ##param_float=100.0,
+        ##)
+        ##transformation.save()
+        ##assert len(m.Transformation.objects.all()) == 1
+        ##assert len(m.Canvas.objects.all()) == 2
+        ##canvas2 = transformation.after
+        ##assert canvas2.title == canvas.title
+        ##assert canvas2.width == canvas.width
+        ##assert canvas2.height == canvas.height
+        ##assert canvas2.turtle_x == 200.0
+        ##assert canvas2.turtle_y == 250.0
+        ##assert canvas2.turtle_heading == 0.0
+
+    ##def test_right_90(self):
+        ##canvas = m.Canvas(
+            ##title='My fancy art',
+            ##width=400,
+            ##height=300,
+        ##)
+        ##canvas.save()
+        ##transformation = m.Transformation(
+            ##before=canvas,
+            ##command='right',
+            ##param_float=90.0,
+        ##)
+        ##transformation.save()
+        ##assert len(m.Transformation.objects.all()) == 1
+        ##assert len(m.Canvas.objects.all()) == 2
+        ##canvas2 = transformation.after
+        ##assert canvas2.title == canvas.title
+        ##assert canvas2.width == canvas.width
+        ##assert canvas2.height == canvas.height
+        ##assert canvas2.turtle_x == 200.0
+        ##assert canvas2.turtle_y == 150.0
+        ##assert canvas2.turtle_heading == 90.0
