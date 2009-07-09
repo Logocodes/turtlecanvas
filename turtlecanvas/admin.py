@@ -11,4 +11,3 @@ class CanvasAdmin(ReadOnlyAdminFields, admin.ModelAdmin):
 
 
 admin.site.register(m.Canvas, CanvasAdmin)
-admin.site.register(m.CanvasState)

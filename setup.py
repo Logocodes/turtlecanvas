@@ -10,7 +10,7 @@ setup(
     long_description="""\
     What does this application do?
     ==============================
-    
+
     - Manages turtle graphics canvases, including their turtle state.
     - Efficiently renders canvas states to PNG.
     """,
@@ -24,6 +24,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        'PIL',
     ],
     entry_points="""
     """,

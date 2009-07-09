@@ -1,3 +1,4 @@
+*.db
 *.pyc
 *.pyd
 *.pyo
@@ -5,6 +6,7 @@
 *~
 .*.swp
 .installed.cfg
+playground.py
 
 *.egg-info
 bin
@@ -14,4 +16,4 @@ dist
 doc/build
 eggs
 parts
-*.db
+renderings
